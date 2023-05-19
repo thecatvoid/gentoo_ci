@@ -23,6 +23,6 @@ jobs:
           id="$(docker ps --filter "name=gentoo_container" --format "{{.ID}}")"
           docker_root="$(docker inspect --format="{{.GraphDriver.Data.MergedDir}}" $id)"
           sudo cp -af ./* $docker_root/
-          echo "GIT_TOKEN=${{ secrets.GIT_TOKEN }}" >> $docker_root/etc/environment 
+          sudo su -c "echo "GIT_TOKEN=${{ secrets.GIT_TOKEN }}" >> $docker_root/etc/environment"
           sudo docker exec gentoo /gentoo.sh setup_build
 

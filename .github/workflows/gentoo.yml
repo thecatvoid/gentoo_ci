@@ -15,8 +15,8 @@ jobs:
 
       - name: Setup Docker container
         run: |
-          sudo docker pull thecatvoid/gentoo:latest
-          sudo docker run -it -d --name gentoo_container gentoo bash
+          docker pull thecatvoid/gentoo:latest
+          docker run -it -d --name gentoo_container gentoo_image:latest bash
 
       - name: Start
         run: |

@@ -1,0 +1,25 @@
+name: Run
+
+on:
+  workflow_dispatch:
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Setup Docker container
+        run: |
+          sudo docker pull thecatvoid/gentoo:latest
+          sudo docker run -it --name gentoo_container -d gentoo:latest bash
+
+      - name: Setup build
+        run: |
+          id="$(docker ps --filter "name=gentoo_container" --format "{{.ID}}")"
+          docker_root="$(docker inspect --format="{{.GraphDriver.Data.MergedDir}}" $id)"
+          sudo cp -af ./* $docker_root/
+          echo "GIT_TOKEN=${{ secrets.GIT_TOKEN }}" >> $docker_root/etc/environment 
+          sudo docker exec gentoo /gentoo.sh setup_build
+
